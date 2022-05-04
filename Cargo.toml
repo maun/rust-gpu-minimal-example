@@ -1,46 +1,30 @@
+[package]
+name = "rust-gpu-minimal-example"
+version = "0.1.0"
+edition = "2021"
+authors = ["Embark <opensource@embark-studios.com>"]
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+futures = { version = "0.3", default-features = false, features = [
+    "std",
+    "executor",
+] }
+# Vulkan SDK or MoltenVK needs to be installed for `vulkan-portability` to work on macOS
+wgpu = { git = "https://github.com/gfx-rs/wgpu", rev = "0ac9ce002656565ccd05b889f5856f4e2c38fa73", features = [
+    "spirv",
+    "vulkan-portability",
+] }
+winit = { version = "0.26" }
+bytemuck = { version = "=1.7.3", features = ["derive"] }
+
+
+[build-dependencies]
+spirv-builder = { version = "0.4.0-alpha.12" }
+
 [workspace]
-resolver = "2"
-members = [
-    "examples/runners/cpu",
-    "examples/runners/ash",
-    "examples/runners/wgpu",
-    "examples/runners/wgpu/builder",
-    "examples/shaders/reduce",
-    "examples/shaders/sky-shader",
-    "examples/shaders/simplest-shader",
-    "examples/shaders/compute-shader",
-    "examples/shaders/mouse-shader",
-    "examples/multibuilder",
-
-    "crates/rustc_codegen_spirv",
-    "crates/rustc_codegen_spirv-types",
-    "crates/spirv-builder",
-    "crates/spirv-std",
-    "crates/spirv-std/shared",
-    "crates/spirv-std/macros",
-
-    "tests",
-    "tests/deps-helper",
-]
-
-# Enable incremental by default in release mode.
-[profile.release]
-incremental = true
-# HACK(eddyb) this is the default but without explicitly specifying it, Cargo
-# will treat the identical settings in `[profile.release.build-override]` below
-# as different sets of `rustc` flags and will not reuse artifacts between them.
-codegen-units = 256
-
-# Compile build-dependencies in release mode with the same settings
-# as regular dependencies (including the incremental enabled above).
-[profile.release.build-override]
-opt-level = 3
-incremental = true
-codegen-units = 256
+members = ["shaders"]
 
 [patch.crates-io]
-spirv-std = { path = "./crates/spirv-std" }
-spirv-std-macros = { path = "./crates/spirv-std/macros" }
-# HACK(eddyb) needed to include this PR (until it's part of a release):
-# * Manishearth/compiletest-rs#249 (for `// only-*` support)
-compiletest_rs = { git = "https://github.com/Manishearth/compiletest-rs.git", rev = "4ab843a1dc6ed9a82657d86d22397c6c5bb95b01" }
+spirv-builder = { git = "https://github.com/EmbarkStudios/rust-gpu" }
+spirv-std = { git = "https://github.com/EmbarkStudios/rust-gpu" }

@@ -1,8 +1,0 @@
-error: Cannot memcpy dynamically sized data
-    --> $CORE_SRC/intrinsics.rs:2210:9
-     |
-2210 |         copy(src, dst, count)
-     |         ^^^^^^^^^^^^^^^^^^^^^
-
-error: aborting due to previous error
-
